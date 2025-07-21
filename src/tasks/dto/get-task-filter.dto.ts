@@ -2,7 +2,7 @@
 // FIXME: Find out why I'm getting no unsafe-call error for class-validator
 
 import { IsEnum, IsOptional, IsString } from 'class-validator';
-import { TaskStatus } from '../task.module';
+import { TaskStatus } from '../task-status.enum';
 
 export class GetTaskFilterDto {
   @IsEnum(TaskStatus)
