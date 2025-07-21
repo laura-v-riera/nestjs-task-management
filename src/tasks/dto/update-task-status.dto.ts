@@ -1,15 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 // FIXME: Find out why I'm getting no unsafe-call error for class-validator
 
-import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { IsEnum } from 'class-validator';
 import { TaskStatus } from '../task.module';
 
-export class GetTaskFilterDto {
+export class UpdateTaskStatusDto {
   @IsEnum(TaskStatus)
-  @IsOptional()
-  status?: TaskStatus;
-
-  @IsString()
-  @IsOptional()
-  search?: string;
+  status: TaskStatus;
 }
