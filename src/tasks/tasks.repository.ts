@@ -5,21 +5,23 @@ import { Task } from './task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TaskStatus } from './task-status.enum';
 import { GetTaskFilterDto } from './dto/get-task-filter.dto';
+import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class TasksRepository {
   constructor(@InjectRepository(Task) private repository: Repository<Task>) {}
 
-  async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
+  async createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
     const task = this.repository.create({
       ...createTaskDto,
       status: TaskStatus.OPEN,
+      user: user,
     });
     await this.repository.save(task);
     return task;
   }
 
-  async getTasks(filterDto: GetTaskFilterDto): Promise<Task[]> {
+  async getTasks(filterDto: GetTaskFilterDto, user: User): Promise<Task[]> {
     const query = this.repository.createQueryBuilder('task');
 
     if (filterDto.status) {
@@ -33,18 +35,19 @@ export class TasksRepository {
       );
     }
 
+    query.andWhere('task.userId = :userId', { userId: user.id });
     return query.getMany();
   }
 
-  async findTaskById(id: string): Promise<Task | null> {
-    return this.repository.findOne({ where: { id } });
+  async findTaskById(id: string, user: User): Promise<Task | null> {
+    return this.repository.findOne({ where: { id, user } });
   }
 
   async save(task: Task): Promise<Task> {
     return this.repository.save(task);
   }
 
-  async deleteTask(id: string): Promise<DeleteResult> {
-    return this.repository.delete(id);
+  async deleteTask(id: string, user: User): Promise<DeleteResult> {
+    return this.repository.delete({ id, user });
   }
 }
