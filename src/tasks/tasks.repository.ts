@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 import { Task } from './task.entity';
@@ -6,11 +6,13 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { TaskStatus } from './task-status.enum';
 import { GetTaskFilterDto } from './dto/get-task-filter.dto';
 import { User } from 'src/auth/user.entity';
+import { Logger } from '@nestjs/common';
 
 @Injectable()
 export class TasksRepository {
   constructor(@InjectRepository(Task) private repository: Repository<Task>) {}
 
+  private logger = new Logger('TasksRepository');
   async createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
     const task = this.repository.create({
       ...createTaskDto,
@@ -36,7 +38,20 @@ export class TasksRepository {
     }
 
     query.andWhere('task.userId = :userId', { userId: user.id });
-    return query.getMany();
+
+    try {
+      const result = await query.getMany();
+      this.logger.debug(
+        `Retrieved tasks for user ${user.username}. Filter: ${JSON.stringify(filterDto)}`,
+      );
+      return result;
+    } catch (error) {
+      this.logger.error(
+        `Failed to retrieve tasks for user ${user.username}. Filter: ${JSON.stringify(filterDto)}`,
+        error instanceof Error ? error.stack : undefined,
+      );
+      throw new InternalServerErrorException();
+    }
   }
 
   async findTaskById(id: string, user: User): Promise<Task | null> {
