@@ -52,6 +52,16 @@ describe('TasksService', () => {
       const result = await tasksService.getTasks({}, mockUser);
       expect(result).toEqual(mockTask);
     });
+    it('filters tasks by status and search term', async () => {
+      const filterDto = { status: TaskStatus.OPEN, search: 'Test' };
+      tasksRepository.getTasks.mockResolvedValue(mockTask);
+      const result = await tasksService.getTasks(filterDto, mockUser);
+      expect(tasksRepository.getTasks).toHaveBeenCalledWith(
+        filterDto,
+        mockUser,
+      );
+      expect(result).toEqual(mockTask);
+    });
   });
 
   describe('getTaskById', () => {
