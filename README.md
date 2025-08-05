@@ -10,26 +10,23 @@ The API is deployed and available at: **https://ec2-13-51-72-235.eu-north-1.comp
 
 ```
 src/
-├── auth/                    # Authentication module
+├── auth/                   # Authentication module
 │   ├── user/               # User entity and decorators
-│   │   ├── user.entity.ts
-│   │   └── get-user.decorator.ts
 │   ├── dto/                # Auth DTOs
-│   ├── auth.controller.ts
-│   ├── auth.service.ts
-│   └── jwt.strategy.ts     # JWT Passport strategy
+│   └── jwt/                # JWT Passport strategy
+│   ├── auth.controller.ts  # Authentication endpoints
+│   ├── auth.service.ts     # Authentication business logic
+│   ├── auth.module.ts      # Auth module configuration
 ├── tasks/                  # Tasks module
 │   ├── dto/                # Task DTOs
-│   │   ├── create-task.dto.ts
-│   │   ├── update-task-status.dto.ts
-│   │   └── get-task-filter.dto.ts
 │   ├── task.entity.ts      # Task entity with user relationship
 │   ├── tasks.controller.ts # Task endpoints with logging
-│   ├── tasks.service.ts
-│   └── tasks.repository.ts
-├── config/                 # Configuration files
-├── Makefile               # Docker convenience commands
-└── main.ts                # Application entry point
+│   ├── tasks.service.ts    # Task business logic
+│   ├── tasks.repository.ts # Task database operations
+│   └── tasks.module.ts     # Tasks module configuration
+├── config.schema.ts        # Environment variables validation schema
+├── app.module.ts           # Root application module
+└── main.ts                 # Application entry point
 ```
 
 ## Tech Stack
