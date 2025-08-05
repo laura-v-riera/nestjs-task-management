@@ -1,98 +1,132 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# NestJS Task Management API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A task management REST API built following the **"NestJS Zero to Hero - Modern TypeScript Back-end Development"** course.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Live Demo
 
-## Description
+The API is deployed and available at: **https://ec2-13-51-72-235.eu-north-1.compute.amazonaws.com/**
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Features
 
-## Project setup
+- **Task Management**: Create, read, update, and delete tasks
+- **User Authentication**: JWT-based authentication and authorization
+- **Task Filtering**: Filter tasks by status and search terms
+- **Data Validation**: Input validation using class-validator
+- **Database Integration**: PostgreSQL with TypeORM
+- **Security**: Password hashing, JWT tokens, and request validation
+- **Logging**: Built-in request and action logging
+- **Testing**: Unit and integration tests
+- **CI/CD**: Automated testing with GitHub Actions
+- **Containerized**: Docker and Docker Compose setup with Makefile commands
 
+## Tech Stack
+
+- **Framework**: NestJS
+- **Language**: TypeScript
+- **Database**: PostgreSQL
+- **ORM**: TypeORM
+- **Authentication**: JWT (JSON Web Tokens) with Passport
+- **Validation**: class-validator & class-transformer
+- **Testing**: Jest
+- **CI/CD**: GitHub Actions
+- **Containerization**: Docker & Docker Compose
+
+## Getting Started
+
+### Prerequisites
+
+- Docker
+- Docker Compose
+- Make (optional, for convenience commands)
+
+### Quick Start
+
+1. Clone the repository:
 ```bash
-$ yarn install
+git clone https://github.com/laura-v-riera/nestjs-task-management.git
+cd nestjs-task-management
 ```
 
-## Compile and run the project
-
+2. Start the development environment:
 ```bash
-# development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
+make dev
 ```
 
-## Run tests
+The API will be available at `http://localhost:3000`
+
+## Make Commands
+
+The project includes a Makefile for convenient Docker operations:
 
 ```bash
-# unit tests
-$ yarn run test
+# Build all images
+make build
 
-# e2e tests
-$ yarn run test:e2e
+# Start development environment (app + database)
+make dev
 
-# test coverage
-$ yarn run test:cov
+# Stop development environment
+make stop
+
+# Clean up containers, networks, and volumes
+make clean
+
+# Build and run production image
+make prod
 ```
 
-## Deployment
+## API Endpoints
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+All task endpoints require authentication via JWT token. Include the token in the Authorization header: `Bearer <token>`
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Authentication
+- `POST /auth/signup` - Create a new user account
+- `POST /auth/signin` - Sign in and get JWT token
+
+### Tasks
+- `GET /tasks` - Get all user's tasks (with optional filtering)
+  - Query parameters: `status` (OPEN, IN_PROGRESS, DONE), `search`
+- `GET /tasks/:id` - Get a specific task by ID
+- `POST /tasks` - Create a new task
+- `PATCH /tasks/:id/status` - Update task status
+- `DELETE /tasks/:id` - Delete a task
+
+## Testing
+
+It includes unit tests for tasks and auth services.
 
 ```bash
-$ yarn install -g @nestjs/mau
-$ mau deploy
+# Run unit tests
+yarn test
+
+# Run tests in Docker container
+docker-compose exec app yarn test
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Tests are automatically run on every push and pull request via GitHub Actions.
 
-## Resources
+## Project Structure
 
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+```
+src/
+├── auth/                    # Authentication module
+│   ├── user/               # User entity and decorators
+│   │   ├── user.entity.ts
+│   │   └── get-user.decorator.ts
+│   ├── dto/                # Auth DTOs
+│   ├── auth.controller.ts
+│   ├── auth.service.ts
+│   └── jwt.strategy.ts     # JWT Passport strategy
+├── tasks/                  # Tasks module
+│   ├── dto/                # Task DTOs
+│   │   ├── create-task.dto.ts
+│   │   ├── update-task-status.dto.ts
+│   │   └── get-task-filter.dto.ts
+│   ├── task.entity.ts      # Task entity with user relationship
+│   ├── tasks.controller.ts # Task endpoints with logging
+│   ├── tasks.service.ts
+│   └── tasks.repository.ts
+├── config/                 # Configuration files
+├── Makefile               # Docker convenience commands
+└── main.ts                # Application entry point
+```
