@@ -6,18 +6,31 @@ A task management REST API built following the **"NestJS Zero to Hero - Modern T
 
 The API is deployed and available at: **https://ec2-13-51-72-235.eu-north-1.compute.amazonaws.com/**
 
-## Features
+## Project Structure
 
-- **Task Management**: Create, read, update, and delete tasks
-- **User Authentication**: JWT-based authentication and authorization
-- **Task Filtering**: Filter tasks by status and search terms
-- **Data Validation**: Input validation using class-validator
-- **Database Integration**: PostgreSQL with TypeORM
-- **Security**: Password hashing, JWT tokens, and request validation
-- **Logging**: Built-in request and action logging
-- **Testing**: Unit and integration tests
-- **CI/CD**: Automated testing with GitHub Actions
-- **Containerized**: Docker and Docker Compose setup with Makefile commands
+```
+src/
+├── auth/                    # Authentication module
+│   ├── user/               # User entity and decorators
+│   │   ├── user.entity.ts
+│   │   └── get-user.decorator.ts
+│   ├── dto/                # Auth DTOs
+│   ├── auth.controller.ts
+│   ├── auth.service.ts
+│   └── jwt.strategy.ts     # JWT Passport strategy
+├── tasks/                  # Tasks module
+│   ├── dto/                # Task DTOs
+│   │   ├── create-task.dto.ts
+│   │   ├── update-task-status.dto.ts
+│   │   └── get-task-filter.dto.ts
+│   ├── task.entity.ts      # Task entity with user relationship
+│   ├── tasks.controller.ts # Task endpoints with logging
+│   ├── tasks.service.ts
+│   └── tasks.repository.ts
+├── config/                 # Configuration files
+├── Makefile               # Docker convenience commands
+└── main.ts                # Application entry point
+```
 
 ## Tech Stack
 
@@ -30,6 +43,19 @@ The API is deployed and available at: **https://ec2-13-51-72-235.eu-north-1.comp
 - **Testing**: Jest
 - **CI/CD**: GitHub Actions
 - **Containerization**: Docker & Docker Compose
+
+## Features
+
+- **Task Management**: Create, read, update, and delete tasks
+- **User Authentication**: JWT-based authentication and authorization
+- **Task Filtering**: Filter tasks by status and search terms
+- **Data Validation**: Input validation using class-validator
+- **Database Integration**: PostgreSQL with TypeORM
+- **Security**: Password hashing, JWT tokens, and request validation
+- **Logging**: Built-in request and action logging
+- **Testing**: Unit and integration tests
+- **CI/CD**: Automated testing with GitHub Actions
+- **Containerized**: Docker and Docker Compose setup with Makefile commands
 
 ## Getting Started
 
@@ -104,29 +130,3 @@ docker-compose exec app yarn test
 ```
 
 Tests are automatically run on every push and pull request via GitHub Actions.
-
-## Project Structure
-
-```
-src/
-├── auth/                    # Authentication module
-│   ├── user/               # User entity and decorators
-│   │   ├── user.entity.ts
-│   │   └── get-user.decorator.ts
-│   ├── dto/                # Auth DTOs
-│   ├── auth.controller.ts
-│   ├── auth.service.ts
-│   └── jwt.strategy.ts     # JWT Passport strategy
-├── tasks/                  # Tasks module
-│   ├── dto/                # Task DTOs
-│   │   ├── create-task.dto.ts
-│   │   ├── update-task-status.dto.ts
-│   │   └── get-task-filter.dto.ts
-│   ├── task.entity.ts      # Task entity with user relationship
-│   ├── tasks.controller.ts # Task endpoints with logging
-│   ├── tasks.service.ts
-│   └── tasks.repository.ts
-├── config/                 # Configuration files
-├── Makefile               # Docker convenience commands
-└── main.ts                # Application entry point
-```
