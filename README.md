@@ -6,6 +6,8 @@ A task management REST API built following the **"NestJS Zero to Hero - Modern T
 
 The API is deployed and available at: **https://ec2-13-51-72-235.eu-north-1.compute.amazonaws.com/**
 
+> **Note**: This is a REST API without a web interface. You can test it using Postman, curl, or any HTTP client. The web interface provided in the course will be deployed soon!
+
 ## Project Structure
 
 ```
