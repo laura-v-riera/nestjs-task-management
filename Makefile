@@ -9,7 +9,7 @@ build:
 
 # Run for production (without Compose)
 prod:
-	docker build -t $(IMAGE_NAME):latest .
+	docker build -f Dockerfile.prod -t $(IMAGE_NAME):latest .
 	docker run -d --env-file .env.stage.prod --name $(IMAGE_NAME)-prod -p 80:3000 $(IMAGE_NAME):latest
 
 # Start dev environment using Docker Compose
