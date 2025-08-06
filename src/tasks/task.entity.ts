@@ -1,4 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  Index,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { TaskStatus } from './task-status.enum';
 import { User } from '../auth/user/user.entity';
 import { Exclude } from 'class-transformer';
@@ -14,6 +20,7 @@ export class Task {
   @Column()
   description: string;
 
+  @Index()
   @Column()
   status: TaskStatus;
 

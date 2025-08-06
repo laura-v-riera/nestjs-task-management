@@ -38,7 +38,7 @@ export class UsersRepository {
   async findOne(username: string): Promise<User> {
     const user = await this.repository.findOne({ where: { username } });
     if (!user) {
-      throw new NotFoundException(`User with username ${username} not found`);
+      throw new NotFoundException(`User not found`);
     }
     return user;
   }

@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing';
-import { AuthService } from './auth.service';
-import { UsersRepository } from './user/users.repository';
+import { AuthService } from '../../src/auth/auth.service';
+import { UsersRepository } from '../../src/auth/user/users.repository';
 import { JwtService } from '@nestjs/jwt';
 import { UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
@@ -37,7 +37,7 @@ describe('AuthService', () => {
   let usersRepository: jest.Mocked<UsersRepository>;
   let jwtService: jest.Mocked<JwtService>;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module = await Test.createTestingModule({
       providers: [
         AuthService,

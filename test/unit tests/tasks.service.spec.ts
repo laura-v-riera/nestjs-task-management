@@ -1,8 +1,8 @@
 import { Test } from '@nestjs/testing';
-import { TasksService } from './tasks.service';
-import { TasksRepository } from './tasks.repository';
-import { TaskStatus } from './task-status.enum';
-import { Task } from './task.entity';
+import { TasksService } from '../../src/tasks/tasks.service';
+import { TasksRepository } from '../../src/tasks/tasks.repository';
+import { TaskStatus } from '../../src/tasks/task-status.enum';
+import { Task } from '../../src/tasks/task.entity';
 import { DeleteResult } from 'typeorm';
 
 const mockTasksRepository = () => ({
@@ -34,7 +34,7 @@ describe('TasksService', () => {
   let tasksService: TasksService;
   let tasksRepository: jest.Mocked<TasksRepository>;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module = await Test.createTestingModule({
       providers: [
         TasksService,

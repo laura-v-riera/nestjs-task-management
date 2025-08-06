@@ -21,7 +21,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       useFactory: (configService: ConfigService) => ({
         secret: configService.get('JWT_SECRET') as string,
         signOptions: {
-          expiresIn: '1h',
+          expiresIn: '1h', //TODO: delete token if signed in again or signed out
         },
       }),
     }),
