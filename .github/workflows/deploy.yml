@@ -1,77 +1,38 @@
-name: Build & Deploy (GHCR → EC2)
+name: Deploy to EC2
 
 on:
   push:
     branches: [ main ]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - uses: actions/checkout@v5
-
-      - name: Log in to GHCR
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Docker metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/Laura-v-riera/nestjs-task-management
-          tags: |
-            type=raw,value=latest
-            type=sha
-
-      - name: Build & push image
-        uses: docker/build-push-action@v6
-        with:
-          file: Dockerfile.prod
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-
   deploy:
     runs-on: ubuntu-latest
-    needs: build
     steps:
-      - name: SSH to EC2 and deploy
+      - name: SSH into EC2 and deploy
         uses: appleboy/ssh-action@v1.2.2
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            set -euo pipefail
+            set -e
 
             APP_DIR=/srv/nestjs-task-management
-            IMAGE=ghcr.io/laura-v-riera/nestjs-task-management:latest
             CONTAINER=nestjs-app-prod
-            ENV_FILE=.env.stage.prod
 
-            sudo mkdir -p "$APP_DIR"
-            sudo chown "$USER":"$USER" "$APP_DIR"
+            # Ensure the repo is present
+            if [ ! -d "$APP_DIR/.git" ]; then
+              sudo mkdir -p "$APP_DIR"
+              sudo chown "$USER":"$USER" "$APP_DIR"
+              git clone https://github.com/laura-v-riera/nestjs-task-management.git "$APP_DIR"
+            fi
+
             cd "$APP_DIR"
+            git fetch --all
+            git reset --hard origin/main
 
-            # Login to GHCR using this workflow's token
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
-            # Pull the freshly built image 
-            docker pull "$IMAGE"
-
-            # Replace running container
+            # Stop and remove current container
             docker rm -f "$CONTAINER" 2>/dev/null || true
-            docker run -d \
-              --name "$CONTAINER" \
-              --env-file "$ENV_FILE" \
-              --restart unless-stopped \
-              -p 80:3000 \
-              "$IMAGE"
 
-            docker image prune -f
+            # Build and run fresh
+            make prod
