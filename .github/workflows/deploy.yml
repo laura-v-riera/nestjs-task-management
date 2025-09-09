@@ -16,7 +16,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             set -euo pipefail
-            APP_DIR=/nestjs-task-management
+            APP_DIR=nestjs-task-management
             CONTAINER=nestjs-app-prod
 
             cd "$APP_DIR"
