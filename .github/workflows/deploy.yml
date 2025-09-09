@@ -15,24 +15,19 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            set -e
-
-            APP_DIR=/srv/nestjs-task-management
+            set -euo pipefail
+            APP_DIR=/nestjs-task-management
             CONTAINER=nestjs-app-prod
 
-            # Ensure the repo is present
-            if [ ! -d "$APP_DIR/.git" ]; then
-              sudo mkdir -p "$APP_DIR"
-              sudo chown "$USER":"$USER" "$APP_DIR"
-              git clone https://github.com/laura-v-riera/nestjs-task-management.git "$APP_DIR"
-            fi
-
             cd "$APP_DIR"
+            git rev-parse --git-dir || { echo "Not a git repo in $APP_DIR"; exit 1; }
+
+            echo "--- Pulling latest changes ---"
             git fetch --all
             git reset --hard origin/main
 
-            # Stop and remove current container
+            echo "--- Removing old container ---"
             docker rm -f "$CONTAINER" 2>/dev/null || true
 
-            # Build and run fresh
+            echo "--- Building & running ---"
             make prod

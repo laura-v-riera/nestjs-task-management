@@ -1,26 +1,25 @@
-# Build
+# ---------- Build stage ----------
 FROM node:22 AS builder
-
 WORKDIR /app
 
 COPY package*.json ./
 COPY yarn.lock ./
 
-RUN yarn install --production
+RUN yarn install --frozen-lockfile
 
 COPY . .
-
 RUN yarn build
 
-# Runtime
+# ---------- Runtime stage ----------
 FROM node:22-slim
-
 WORKDIR /app
+ENV NODE_ENV=production
+
+COPY package*.json ./
+COPY yarn.lock ./
+# Only production deps in final image
+RUN yarn install --production --frozen-lockfile --ignore-scripts && yarn cache clean
 
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/package.json ./
-COPY --from=builder /app/yarn.lock ./
-
-ENV NODE_ENV=production
 
 CMD ["node", "dist/main"]
